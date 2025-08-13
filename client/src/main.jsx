@@ -7,7 +7,6 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Today from "./pages/Today";
 import CreateMood from "./pages/CreateMood";
-import Timeline from "./pages/Timeline";
 import HistoryPage from "./pages/HistoryPage";
 import PrivateRoute from "./components/PrivateRoute";
 import "./index.css";
@@ -24,7 +23,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <Route element={<PrivateRoute />}>
               <Route path="today" element={<Today />} />
               <Route path="create" element={<CreateMood />} />
-              <Route path="timeline" element={<Timeline />} />
               <Route path="history" element={<HistoryPage />} />
             </Route>
           </Route>

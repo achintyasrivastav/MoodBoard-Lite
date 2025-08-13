@@ -16,7 +16,6 @@ export default function Navigation() {
             <>
               <NavLink to="/today" className={link}>Today</NavLink>
               <NavLink to="/create" className={link}>Create</NavLink>
-              <NavLink to="/timeline" className={link}>Timeline</NavLink>
               <NavLink to="/history" className={link}>History</NavLink>
             </>
           )}
