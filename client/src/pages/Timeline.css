@@ -1,0 +1,82 @@
+.timeline-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.timeline-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.timeline-header h1 {
+  margin: 0 0 24px 0;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.timeline-filters {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.timeline-filters button {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 24px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.timeline-filters button:hover,
+.timeline-filters button.active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.timeline-content {
+  margin-bottom: 40px;
+}
+
+.timeline-day {
+  margin-bottom: 40px;
+}
+
+.timeline-date {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.timeline-moods {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.no-moods {
+  background: white;
+  border-radius: 16px;
+  padding: 60px 40px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.no-moods h3 {
+  margin: 0 0 16px 0;
+  color: #495057;
+  font-size: 1.5rem;
+}
+
+.no-moods p {
+  margin: 0;
+  color: #6c757d;
+  font-size: 1.1rem;
+}
