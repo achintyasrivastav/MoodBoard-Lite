@@ -1,14 +1,25 @@
 import "./index.css"
 import Navigation from "./components/Navigation"
 import { Outlet } from "react-router-dom"
+import { ThemeProvider, useTheme } from "./context/ThemeContext"
 
-export default function App() {
+function AppContent() {
+  const { theme } = useTheme()
+
   return (
-    <div className="App min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className={`App min-h-screen bg-gradient-to-br ${theme.primary}`}>
       <Navigation />
       <main className="main-content pt-4 pb-8">
         <Outlet />
       </main>
     </div>
+  )
+}
+
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   )
 }

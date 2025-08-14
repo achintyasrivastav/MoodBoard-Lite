@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import api from "../api/api"
+import { useEffect, useMemo, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "../context/ThemeContext"; // ← use the same theme as Create
+import api from "../api/api";
 
 // helpers
 const fmtDay = (yyyyMMdd) =>
@@ -9,20 +10,21 @@ const fmtDay = (yyyyMMdd) =>
     year: "numeric",
     month: "short",
     day: "numeric",
-  })
-const fmtTime = (iso) => new Date(iso).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })
+  });
+const fmtTime = (iso) => new Date(iso).toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
 
 export default function HistoryPage() {
-  const [items, setItems] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState("")
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const { theme } = useTheme(); // ← pull theme
 
   useEffect(() => {
     api
       .get("/api/mood/history")
       .then(({ data }) => setItems(Array.isArray(data) ? data : []))
-      .finally(() => setLoading(false))
-  }, [])
+      .finally(() => setLoading(false));
+  }, []);
 
   // group by normalized date and filter by search term
   const groups = useMemo(() => {
@@ -30,42 +32,41 @@ export default function HistoryPage() {
       (item) =>
         !searchTerm ||
         item.note?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.emojis?.join("").includes(searchTerm),
-    )
-
-    const map = new Map()
+        item.emojis?.join("").includes(searchTerm)
+    );
+    const map = new Map();
     for (const m of filteredItems) {
-      const key = m.date
-      if (!map.has(key)) map.set(key, [])
-      map.get(key).push(m)
+      const key = m.date;
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(m);
     }
-    return Array.from(map.entries()).sort(([a], [b]) => (a < b ? 1 : -1))
-  }, [items, searchTerm])
+    return Array.from(map.entries()).sort(([a], [b]) => (a < b ? 1 : -1));
+  }, [items, searchTerm]);
 
   if (loading) {
     return (
       <motion.div
-        className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 p-4"
+        className={`min-h-screen bg-gradient-to-br ${theme.primary} p-4`} // ← use theme
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
         <div className="max-w-4xl mx-auto pt-8">
-          <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 text-center">
+          <div className={`${theme.card} ${theme.border} border rounded-2xl p-8 text-center backdrop-blur-lg`}>
             <motion.div
-              className="w-8 h-8 border-2 border-white border-t-transparent rounded-full mx-auto mb-4"
+              className="w-8 h-8 border-2 border-white/70 border-t-transparent rounded-full mx-auto mb-4"
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
             />
-            <p className="text-white/70">Loading your mood history...</p>
+            <p className={`${theme.textSecondary}`}>Loading your mood history...</p>
           </div>
         </div>
       </motion.div>
-    )
+    );
   }
 
   return (
     <motion.div
-      className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 p-4"
+      className={`min-h-screen bg-gradient-to-br ${theme.primary} p-4`} // ← use theme
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
@@ -77,29 +78,49 @@ export default function HistoryPage() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <h1 className="text-4xl font-bold text-white mb-2">Mood History</h1>
-          <p className="text-white/70 text-lg">Your emotional journey over time</p>
+          <h1 className={`text-4xl font-bold ${theme.text} mb-2`}>Mood History</h1>
+          <p className={`${theme.textSecondary} text-lg`}>Your emotional journey over time</p>
+        </motion.div>
+
+        <motion.div
+          className="mb-8"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <div className="max-w-md mx-auto">
+            <input
+              type="text"
+              placeholder="Search your moods..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={`w-full px-4 py-3 rounded-full transition-all duration-200
+                          ${theme.card} ${theme.border} border
+                          ${theme.text} placeholder-white/50
+                          focus:outline-none focus:ring-2 focus:ring-purple-400`}
+            />
+          </div>
         </motion.div>
 
         {groups.length === 0 ? (
           <motion.div
-            className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-12 text-center"
+            className={`${theme.card} ${theme.border} border rounded-2xl p-12 text-center backdrop-blur-lg`}
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
             <div className="text-6xl mb-4">📝</div>
-            <h3 className="text-2xl font-bold text-white mb-2">
+            <h3 className={`text-2xl font-bold ${theme.text} mb-2`}>
               {searchTerm ? "No matching moods found" : "No moods yet"}
             </h3>
-            <p className="text-white/70">
+            <p className={`${theme.textSecondary}`}>
               {searchTerm ? "Try a different search term" : "Start creating your first mood today!"}
             </p>
           </motion.div>
         ) : (
           <div className="relative">
-            {/* Timeline line */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-purple-400 via-blue-400 to-indigo-400 opacity-30" />
+            {/* center line */}
+            <div className="absolute left-1/2 -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-purple-400 via-blue-400 to-indigo-400 opacity-30" />
 
             <AnimatePresence>
               {groups.map(([day, moods], groupIndex) => (
@@ -110,7 +131,6 @@ export default function HistoryPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: groupIndex * 0.1 }}
                 >
-                  {/* Date Badge */}
                   <motion.div
                     className="flex justify-center mb-8"
                     initial={{ scale: 0 }}
@@ -124,7 +144,7 @@ export default function HistoryPage() {
 
                   <div className="space-y-8">
                     {moods.map((mood, moodIndex) => {
-                      const isLeft = moodIndex % 2 === 0
+                      const isLeft = moodIndex % 2 === 0;
                       return (
                         <motion.div
                           key={mood._id}
@@ -135,9 +155,9 @@ export default function HistoryPage() {
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: groupIndex * 0.1 + moodIndex * 0.1 + 0.3 }}
                         >
-                          {/* Timeline dot */}
+                          {/* connector dot */}
                           <motion.div
-                            className="hidden md:block absolute left-1/2 transform -translate-x-1/2 mt-6 w-4 h-4 rounded-full border-4 border-white shadow-lg z-10"
+                            className="hidden md:block absolute left-1/2 -translate-x-1/2 mt-6 w-4 h-4 rounded-full border-4 border-white shadow-lg z-10"
                             style={{ backgroundColor: mood.color || "#8b5cf6" }}
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
@@ -149,9 +169,9 @@ export default function HistoryPage() {
                             }}
                           />
 
-                          {/* Mood Card */}
+                          {/* card */}
                           <motion.article
-                            className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-xl"
+                            className={`${theme.card} ${theme.border} border rounded-2xl p-6 shadow-xl backdrop-blur-lg`}
                             whileHover={{ scale: 1.02, y: -5 }}
                             transition={{ type: "spring", stiffness: 300, damping: 30 }}
                           >
@@ -191,7 +211,7 @@ export default function HistoryPage() {
 
                             {mood.note && (
                               <motion.p
-                                className="text-white/80 leading-relaxed"
+                                className={`${theme.textSecondary} leading-relaxed`}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: groupIndex * 0.1 + moodIndex * 0.1 + 0.7 }}
@@ -201,10 +221,9 @@ export default function HistoryPage() {
                             )}
                           </motion.article>
 
-                          {/* Spacer for alternating layout */}
                           <div className="hidden md:block" />
                         </motion.div>
-                      )
+                      );
                     })}
                   </div>
                 </motion.div>
@@ -214,5 +233,5 @@ export default function HistoryPage() {
         )}
       </div>
     </motion.div>
-  )
+  );
 }
