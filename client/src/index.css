@@ -1,25 +1,33 @@
 @import "tailwindcss";
 
-/* Simplified CSS - removed custom animations, keeping only essential styles */
-/* Custom scrollbar styling for better aesthetics */
+/* Custom scrollbar styling */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: rgba(30, 41, 59, 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #475569;
-  border-radius: 3px;
+  background: rgba(139, 92, 246, 0.6);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: rgba(139, 92, 246, 0.8);
 }
 
-/* Smooth focus transitions for better accessibility */
+/* Smooth focus transitions */
 *:focus {
   transition: all 0.2s ease-in-out;
+}
+
+/* Glass morphism backdrop support */
+.backdrop-blur-lg {
+  backdrop-filter: blur(16px);
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
 }
