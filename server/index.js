@@ -10,12 +10,20 @@ connectDB();
 
 const app = express();
 
-// Enable CORS
+const allowList = (process.env.ALLOWED_ORIGIN || "http://localhost:5173")
+  .split(",")
+  .map(s => s.trim());
+
 const corsOptions = {
-  origin: "http://localhost:5173", // Allow only requests from this origin
-  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
-  credentials: true, // Allow credentials (cookies, headers, etc.)
+  origin: (origin, cb) => {
+    // allow same-origin/SSR (no origin) and any match in allowList
+    if (!origin || allowList.includes(origin)) return cb(null, true);
+    return cb(new Error("Not allowed by CORS"));
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 };
+
 app.use(cors(corsOptions));
 
 app.use(express.json());
