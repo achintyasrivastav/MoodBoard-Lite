@@ -1,2 +1,25 @@
 @import "tailwindcss";
 
+/* Simplified CSS - removed custom animations, keeping only essential styles */
+/* Custom scrollbar styling for better aesthetics */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Smooth focus transitions for better accessibility */
+*:focus {
+  transition: all 0.2s ease-in-out;
+}
