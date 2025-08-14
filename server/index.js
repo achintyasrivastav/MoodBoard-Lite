@@ -10,20 +10,12 @@ connectDB();
 
 const app = express();
 
-const allowList = (process.env.ALLOWED_ORIGIN || "http://localhost:5173")
-  .split(",")
-  .map(s => s.trim());
-
+// Enable CORS
 const corsOptions = {
-  origin: (origin, cb) => {
-    // allow same-origin/SSR (no origin) and any match in allowList
-    if (!origin || allowList.includes(origin)) return cb(null, true);
-    return cb(new Error("Not allowed by CORS"));
-  },
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
+  origin: "http://localhost:5173", // Allow only requests from this origin
+  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+  credentials: true, // Allow credentials (cookies, headers, etc.)
 };
-
 app.use(cors(corsOptions));
 
 app.use(express.json());
@@ -39,4 +31,3 @@ app.use("/api/mood", moodRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
